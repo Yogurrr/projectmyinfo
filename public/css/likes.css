@@ -51,3 +51,12 @@
 .tpl:last-child {
     margin-bottom: 3%;
 }
+
+.combtn {
+    border: 1px solid #331904 !important;
+    background-color: #331904 !important;
+}
+.combtn:active {
+    border: 1px solid #984C0C !important;
+    background-color: #984C0C !important;
+}

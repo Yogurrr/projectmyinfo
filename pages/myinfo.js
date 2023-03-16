@@ -1,15 +1,14 @@
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import './Myinfo.css'
 import Link from "next/link";
 
 export default function Myinfo () {
     return (
-        <div>
+        <main>
             <Container fluid>
                 <Row className="lnm2">
-                    <Col className="likesmenu2 col-6"><Link href='/'>좋아요</Link></Col>
+                    <Col className="likesmenu2 col-6"><Link href='/likes'>좋아요</Link></Col>
                     <Col className="bar2 col-1">|</Col>
                     <Col className="infomenu2 col-5">내정보</Col>
                 </Row>
@@ -26,6 +25,6 @@ export default function Myinfo () {
                     <Col className="col-10 offset-1">카드링크</Col>
                 </Row>
             </Container>
-        </div>
+        </main>
     )
 }

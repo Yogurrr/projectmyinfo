@@ -1,72 +1,89 @@
-import Link from "next/link";
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Modal from "react-bootstrap/Modal";
-import {Button} from "react-bootstrap";
-import './Nav.css';
+import {Container, Row, Col, NavLink, Button, Modal} from 'react-bootstrap';
+import { HiOutlineMapPin } from 'react-icons/hi2';
+import { BsCalendar } from 'react-icons/bs';
+import { CiUser } from 'react-icons/ci';
+import Link from 'next/link';
 import React, {useState} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import {ko} from "date-fns/locale";
 
 const Nav = () => {
+    const tomorrow = new Date().setDate(new Date().getDate() + 1);
+
     const [show, setShow] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [startDate, setStartDate] = useState(tomorrow);
+    const [endDate, setEndDate] = useState(null);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    return (
-        <div>
-            {/*<script>
-                $(function () {
-                $('#datePicker').datepicker({
-                    format: 'yyyy-mm-dd', startDate: '-10d', endDate: '+10d', autoClose: true, calendarWeeks: false, clearBtn: false, multidate: false,
-                    templates: { leftArrow: '&laquo;', rightArrow: '&raquo;' }, showWeekDays: true, title: '시작 날짜', language: 'ko'
-                }).on("changeDate", function(e) {
-                    console.log(e);
-                } )
-            })
-            </script>*/}
-            <Container fluid>
-                <Row className="title">
-                    <Col className="col-2"><Link href='/'>Temfo,</Link></Col>
-                    <Col className="col-4" style={{textAlign: "right"}}><Link href='/'><i className="bi bi-geo-alt"></i>지역</Link></Col>
-                    <Col className="col-3" style={{textAlign: "left"}}><i className="bi bi-calendar"></i>
-                        <Button className="calbtn" onClick={handleShow}>일정</Button>
+    const onChange = (dates) => {
+        const [start, end] = dates;
+        setStartDate(start);
+        setEndDate(end);
+    };
 
-                        <Modal show={show} onHide={handleClose}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>날짜 선택</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body className="cal">
-                                <input type="text" id="datePicker1" className="form-control" placeholder="시작 날짜"  />
-                                <DatePicker
-                                    selected={selectedDate}
-                                    onChange={date => setSelectedDate(date)}
-                                    dateFormat="yyyy-MM-dd"
-                                    startDate={new Date()}
-                                    endDate={new Date().setDate(new Date().getDate() + 10)}
-                                    title="시작 날짜"
-                                    language="ko"
-                                />
-                                <input type="text" id="datePicker2" className="form-control" placeholder="끝 날짜"  />
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={handleClose}>
-                                    닫기
-                                </Button>
-                                <Button variant="primary" onClick={handleClose}>
-                                    선택
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
+    return (
+        <div className='border-bottom border-2 border-primary' id='navWrapper'>
+            <Container fluid='xxl'>
+                <Row className='title'>
+                    <Col md={{ span: 1 }} style={{textAlign: "center"}}>
+                        <NavLink href='/'>
+                            Temfo,
+                        </NavLink>
                     </Col>
-                    <Col className="col-3" style={{textAlign: "right"}}><Link href='/'><i className="bi bi-person"></i></Link></Col>
+                    <Col md={{ span: 5 }} style={{textAlign: "right"}}>
+                        <Link href='/region'>
+                            <NavLink style={{paddingTop: "0.5%"}}>
+                                <HiOutlineMapPin style={{marginTop: "-1.5%"}} />지역
+                            </NavLink>
+                        </Link>
+                    </Col>
+                    <Col md={{ span: 5 }} style={{textAlign: "left"}}>
+                        <>
+                            <Button className="calbtn" onClick={handleShow}>일정<BsCalendar style={{marginTop: "-15%"}} /></Button>
+                            <Modal show={show} onHide={handleClose}>
+                                <Modal.Header style={{justifyContent: "center", height: "45px", color: "#331904"}}>
+                                    <Modal.Title>날짜 선택</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body className="cal">
+                                    <DatePicker
+                                        selected={startDate}
+                                        onChange={onChange}
+                                        inline
+                                        startDate={startDate}
+                                        endDate={endDate}
+                                        minDate={tomorrow}
+                                        monthsShown={2}
+                                        selectsRange
+                                        dateFormat="yyyy-MM-dd"
+                                        locale={ko}
+                                    />
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleClose} style={{backgroundColor: "#331904"}}>
+                                        닫기
+                                    </Button>
+                                    <Button variant="primary" onClick={handleClose}>
+                                        선택
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
+                        </>
+                    </Col>
+                    <Col md={{ span: 1 }} style={{textAlign: "center"}}>
+                        <NavLink href='/login'>
+                            <NavLink>
+                                <CiUser />
+                            </NavLink>
+                        </NavLink>
+                    </Col>
                 </Row>
             </Container>
+            <div className='navBorder'></div>
         </div>
-    )
-}
+    );
+};
 
 export default Nav;

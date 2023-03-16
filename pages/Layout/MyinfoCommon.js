@@ -1,11 +1,9 @@
-import './MainCommon.css';
-import 'bootstrap/dist/css/bootstrap.css'
 import React from "react";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
-const MainCommon = () => {
+const MyinfoCommon = () => {
     return (
         <div>
             <Container fluid>
@@ -21,4 +19,4 @@ const MainCommon = () => {
     )
 }
 
-export default MainCommon;
+export default MyinfoCommon;

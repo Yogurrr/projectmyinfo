@@ -3,20 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "next lint"
   },
   "dependencies": {
+    "@bcad1591/react-date-picker": "^0.1.1",
     "bootstrap": "^5.2.3",
-    "eslint": "8.36.0",
-    "eslint-config-next": "13.2.4",
+    "date-fns": "^2.29.3",
     "next": "10.2.3",
     "react": "16.14.0",
     "react-bootstrap": "^2.7.2",
     "react-datepicker": "^4.10.0",
-    "react-dom": "16.14.0"
+    "react-dater": "^1.6.0",
+    "react-dom": "16.14.0",
+    "react-icons": "^4.8.0"
   },
   "devDependencies": {
     "eslint": "7.23.0",
