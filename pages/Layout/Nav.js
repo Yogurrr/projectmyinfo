@@ -24,6 +24,12 @@ const Nav = () => {
         setEndDate(end);
     };
 
+    const handleSubmit = () => {
+        setShow(false)
+        let std = startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate();
+        let edd = endDate.getFullYear() + '-' + (endDate.getMonth()+1) + '-' + endDate.getDate();
+        console.log(`체크인: ${std}, 체크아웃: ${edd}`)
+    };
     return (
         <div className='border-bottom border-2 border-primary' id='navWrapper'>
             <Container fluid='xxl'>
@@ -43,7 +49,7 @@ const Nav = () => {
                     <Col md={{ span: 5 }} style={{textAlign: "left"}}>
                         <>
                             <Button className="calbtn" onClick={handleShow}>일정<BsCalendar style={{marginTop: "-15%"}} /></Button>
-                            <Modal show={show} onHide={handleClose}>
+                            <Modal show={show} onHide={handleClose} className="calmod">
                                 <Modal.Header style={{justifyContent: "center", height: "45px", color: "#331904"}}>
                                     <Modal.Title>날짜 선택</Modal.Title>
                                 </Modal.Header>
@@ -65,7 +71,7 @@ const Nav = () => {
                                     <Button variant="secondary" onClick={handleClose} style={{backgroundColor: "#331904"}}>
                                         닫기
                                     </Button>
-                                    <Button variant="primary" onClick={handleClose}>
+                                    <Button variant="primary" onClick={handleSubmit} className="selbtn">
                                         선택
                                     </Button>
                                 </Modal.Footer>

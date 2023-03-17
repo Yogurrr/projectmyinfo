@@ -60,3 +60,29 @@
     border: 1px solid #984C0C !important;
     background-color: #984C0C !important;
 }
+
+.comlin { text-decoration: none; }
+.comlin:visited { color: white; }
+.comlin:active { color: white; }
+.comlin:hover { color: white; }
+
+.comtab {
+    display: flex;
+    justify-content: space-evenly;
+}
+.comtab table {
+    text-align: center;
+    border: 1px solid #331904;
+    width: 1000px;
+}
+.comtab tr {
+    border: 1px solid #331904;
+}
+.comtab th, .comtab td {
+    border: 1px solid #331904;
+}
+
+.gobkbtn td button {
+    border: 1px solid #984C0C !important;
+    background-color: #984C0C !important;
+}

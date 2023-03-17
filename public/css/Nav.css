@@ -84,3 +84,8 @@ div.react-datepicker-wrapper:nth-child(3) > div:nth-child(1) > input:nth-child(2
 .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range) { background-color: #984C0C; opacity: 0.7; }
 
 .react-datepicker__header:not(.react-datepicker__header--has-time-select) { border-radius: 0; }
+
+.selbtn:active {
+    border: 1px solid #984C0C !important;
+    background-color: #984C0C !important;
+}

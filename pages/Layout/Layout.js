@@ -3,6 +3,10 @@ import MyinfoCommon from "./MyinfoCommon";
 
 const Layout = ({children}) => {
     return (
+        <html lang="ko">
+        <head>
+            <title>연습</title>
+        </head>
         <div>
             <div className="container">
                 <Nav />
@@ -12,6 +16,7 @@ const Layout = ({children}) => {
             </div>
             <footer>copyright &copy; 2023. 팀명. All Rights Reserved.</footer>
         </div>
+        </html>
     );
 }
 
