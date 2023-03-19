@@ -86,3 +86,8 @@
     border: 1px solid #984C0C !important;
     background-color: #984C0C !important;
 }
+
+.checkbox {
+    padding-right: 15%;
+    padding-left: 10%;
+}

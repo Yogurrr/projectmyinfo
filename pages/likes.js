@@ -1,56 +1,62 @@
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Modal from 'react-bootstrap/Modal';
 import Link from "next/link";
-import {Button, Form, Modal} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 
-// export async function getServerSideProps(ctx) {
-//     // 세션 객체 가져오기
-//     const sess = await getSession(ctx);
-//
-//     let userid = sess.user.userid;   // 로그인한 사용자 아이디
-//     let url = `http://localhost:3000/api/member/myinfo?userid=${userid}`;
-//
-//     const res = await axios.get(url);
-//     const member = await res.data[0];
-//     console.log('pg myinfo - ', await member);
-//
-//     return { props: { member: member, session: sess } }
-// }
-
-export default function Likes () {
+export default function Likes (effect, deps) {
 
     const [show, setShow] = useState(false);
+    const handleShow = () => {
+        setShow(true);
+    }
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+
+    // useEffect( () => {
+    //     const checkbox = document.querySelectorAll('input[type=checkbox]');
+    //     const compareButton = document.querySelector('.combtn');
+    //
+    //     function updateCompareButton() {
+    //         // Array.from 함수는 유사 배열 객체나 반복 가능한 객체를 배열로 변환
+    //         // some() 메서드는 배열 요소 중 하나 이상의 조건을 만족하는지 검사
+    //         const checked = Array.from(checkbox).some(checkbox => checkbox.checked)
+    //         // compareButton.disabled = !checked;
+    //         // compareButton.disabled = checked.length < 1
+    //         if (checked.length < 1) {
+    //             compareButton.disabled = true
+    //         } else {
+    //             compareButton.disabled = false
+    //         }
+    //     }
+    //
+    //     // 체크박스의 변경 이벤트에 함수 연결
+    //     checkbox.forEach(checkbox => checkbox.addEventListener('change', updateCompareButton));
+    //
+    // } )
+
+    // useEffect( () => {
+    //     const checkbox = document.querySelectorAll('input[type=checkbox]');
+    //     if (checkbox < 1 && onclick) {
+    //         alert('1개 이상 선택해야 합니다!');
+    //     }
+    // } )
+
+    const compare = () => {
+        const checkbox = document.querySelectorAll('input[type=checkbox]');
+        const checked = Array.from(checkbox).some(checkbox => checkbox.checked)
+        if (checked.length < 2) {
+            alert('2개 이상 선택해야 합니다!');
+        } else {
+            setShow(true);
+        }
+    }
 
     const go2bk = () => {
         handleClose()
         location.href = '/book';
     };
-
-    // useEffect( () => {
-    //     const checkbox = document.querySelectorAll(".checkbox");
-    //     const compareButton = document.querySelector(".combtn");
-    //
-    //     checkbox.forEach((cb) => {
-    //         cb.addEventListener('click', () => {
-    //             const checkedCount = document.querySelectorAll('.checkbox:checked').length;
-    //             console.log(checkedCount);
-    //
-    //             if (checkedCount > 1) {
-    //                 compareButton.disabled = false;
-    //             } else {
-    //                 compareButton.disabled = true;
-    //             }
-    //         });
-    //     });
-    // } )
-
-    useEffect( () => {
-        const
-    } )
 
     return (
         <main>
@@ -64,7 +70,7 @@ export default function Likes () {
                     <Col className="temples col-9 offset-1" style={{fontSize: "25px"}}>좋아요를 누른 사찰</Col>
                     <Col>
                         <>
-                            <Button variant="primary" className="combtn" disabled onClick={handleShow}>비교하기</Button>
+                            <Button variant="primary" className="combtn" onClick={compare}>비교하기</Button>
                             <Modal size="xl" show={show} onHide={handleClose}>
                                 <Modal.Header style={{justifyContent: "center", height: "45px", color: "#331904"}}>
                                     <Modal.Title>템플 스테이 비교</Modal.Title>
@@ -114,8 +120,8 @@ export default function Likes () {
                     <Col className="likeslist col-10 offset-1">
                         <Col className="col-3" style={{display: "flex"}}>
                             <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 1" style={{paddingRight: "15%", paddingLeft: "10%"}}></Form.Check>
-                                <img src="/img/temple.png" width="32" height="32"/>
+                                <Form.Check type="checkbox" className="checkbox" aria-label="option 1"></Form.Check>
+                                <img src="/img/temple.png" width="32" height="32" />
                             </Col>
                             <Col className="col-7">AA사</Col>
                         </Col>
@@ -129,7 +135,7 @@ export default function Likes () {
                     <Col className="likeslist col-10 offset-1">
                         <Col className="col-3" style={{display: "flex"}}>
                             <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 2" style={{paddingRight: "15%", paddingLeft: "10%"}}></Form.Check>
+                                <Form.Check type="checkbox" className="checkbox" aria-label="option 2"></Form.Check>
                                 <img src="/img/temple.png" width="32" height="32"/>
                             </Col>
                             <Col className="col-7">BB사</Col>
@@ -144,7 +150,7 @@ export default function Likes () {
                     <Col className="likeslist col-10 offset-1">
                         <Col className="col-3" style={{display: "flex"}}>
                             <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 3" style={{paddingRight: "15%", paddingLeft: "10%"}}></Form.Check>
+                                <Form.Check type="checkbox" className="checkbox" aria-label="option 3"></Form.Check>
                                 <img src="/img/temple.png" width="32" height="32"/>
                             </Col>
                             <Col className="col-7">CC사</Col>
@@ -159,7 +165,7 @@ export default function Likes () {
                     <Col className="likeslist col-10 offset-1">
                         <Col className="col-3" style={{display: "flex"}}>
                             <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 4" style={{paddingRight: "15%", paddingLeft: "10%"}}></Form.Check>
+                                <Form.Check type="checkbox" className="checkbox" aria-label="option 4"></Form.Check>
                                 <img src="/img/temple.png" width="32" height="32"/>
                             </Col>
                             <Col className="col-7">DD사</Col>
@@ -174,7 +180,7 @@ export default function Likes () {
                     <Col className="likeslist col-10 offset-1">
                         <Col className="col-3" style={{display: "flex"}}>
                             <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 5" style={{paddingRight: "15%", paddingLeft: "10%"}}></Form.Check>
+                                <Form.Check type="checkbox" className="checkbox" aria-label="option 5"></Form.Check>
                                 <img src="/img/temple.png" width="32" height="32"/>
                             </Col>
                             <Col className="col-7">EE사</Col>
