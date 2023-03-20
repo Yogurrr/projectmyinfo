@@ -7,7 +7,7 @@ import {Button, Form} from "react-bootstrap";
 import React, {useState} from "react";
 import { temples } from "./utils/temples";
 
-export default function Likes (effect, deps) {
+export default function Likes (props) {
 
     const [checkedState, setCheckedState] = useState(
         new Array(temples.length).fill(false)
@@ -70,36 +70,22 @@ export default function Likes (effect, deps) {
                                     <Modal.Title>템플 스테이 비교</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body className="comtab">
-                                    <table style={{textAlign: "center", border: "1px solid #331904"}}>
-                                        <tr>
-                                            <th>AA사 AAAA</th>
-                                            <th>BB사 BBBB</th>
-                                            <th>CC사 CCCC</th>
-                                        </tr>
-                                        <tr>
-                                            <td colSpan="3" style={{height: "500px"}}>(지도)</td>
-                                        </tr>
-                                        <tr style={{height: "40px"}}>
-                                            <td>AA형</td>
-                                            <td>BB형</td>
-                                            <td>CC형</td>
-                                        </tr>
-                                        <tr style={{height: "40px"}}>
-                                            <td>가격 비교 1</td>
-                                            <td>가격 비교 2</td>
-                                            <td>가격 비교 3</td>
-                                        </tr>
-                                        <tr style={{height: "400px"}}>
-                                            <td>상세정보 비교 1</td>
-                                            <td>상세정보 비교 2</td>
-                                            <td>상세정보 비교 3</td>
-                                        </tr>
-                                        <tr className="gobkbtn">
-                                            <td style={{border: "1px solid white", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
-                                            <td style={{border: "1px solid white", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
-                                            <td style={{border: "1px solid white", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
-                                        </tr>
-                                    </table>
+                                    {temples.map(({ name, location, day, program, price }, index ) => {   // temples에서 정보 가져오기
+                                        return (
+                                            <table style={{textAlign: "center", border: "1px solid #331904"}} key={index}>
+                                                <tr>
+                                                    <th>{name}</th>
+                                                </tr>
+                                                <tr style={{height: "500px"}}><td>지도</td></tr>
+                                                <tr style={{height: "40px"}}><td>{program}</td></tr>
+                                                <tr style={{height: "40px"}}><td>{price}</td></tr>
+                                                <tr style={{height: "400px"}}>상세정보 비교</tr>
+                                                <tr className="gobkbtn">
+                                                    <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
+                                                </tr>
+                                            </table>
+                                        )
+                                    } )}
                                 </Modal.Body>
                                 <Modal.Footer>
                                     <Button variant="secondary" onClick={handleClose} style={{backgroundColor: "#331904"}}>
