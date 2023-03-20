@@ -4,56 +4,50 @@ import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Link from "next/link";
 import {Button, Form} from "react-bootstrap";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
+import { temples } from "./utils/temples";
 
 export default function Likes (effect, deps) {
 
+    const [checkedState, setCheckedState] = useState(
+        new Array(temples.length).fill(false)
+    );
+
+    let handleOnChange = (position, e) => {
+        if (checkedState.filter((i) => i).length >= 3 && e.target.checked) return;
+        let updatedCheckedState = checkedState.map((item, index) =>
+            index === position ? !item : item
+        );
+
+        // allow only 3 elements
+        if (updatedCheckedState.filter(v => v).length >= 4) {
+            return
+        }
+
+        setCheckedState(updatedCheckedState);
+    };
+
     const [show, setShow] = useState(false);
     const handleShow = () => {
-        setShow(true);
-    }
-    const handleClose = () => setShow(false);
+        let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        let count = 0;
 
-    // useEffect( () => {
-    //     const checkbox = document.querySelectorAll('input[type=checkbox]');
-    //     const compareButton = document.querySelector('.combtn');
-    //
-    //     function updateCompareButton() {
-    //         // Array.from 함수는 유사 배열 객체나 반복 가능한 객체를 배열로 변환
-    //         // some() 메서드는 배열 요소 중 하나 이상의 조건을 만족하는지 검사
-    //         const checked = Array.from(checkbox).some(checkbox => checkbox.checked)
-    //         // compareButton.disabled = !checked;
-    //         // compareButton.disabled = checked.length < 1
-    //         if (checked.length < 1) {
-    //             compareButton.disabled = true
-    //         } else {
-    //             compareButton.disabled = false
-    //         }
-    //     }
-    //
-    //     // 체크박스의 변경 이벤트에 함수 연결
-    //     checkbox.forEach(checkbox => checkbox.addEventListener('change', updateCompareButton));
-    //
-    // } )
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                count++;
+            }
+        });
 
-    // useEffect( () => {
-    //     const checkbox = document.querySelectorAll('input[type=checkbox]');
-    //     if (checkbox < 1 && onclick) {
-    //         alert('1개 이상 선택해야 합니다!');
-    //     }
-    // } )
-
-    const compare = () => {
-        const checkbox = document.querySelectorAll('input[type=checkbox]');
-        const checked = Array.from(checkbox).some(checkbox => checkbox.checked)
-        if (checked.length < 2) {
-            alert('2개 이상 선택해야 합니다!');
+        if (count <= 1) {
+            alert('비교할 대상을 2개 이상 선택해주세요!')
+            setShow(false);
         } else {
             setShow(true);
         }
     }
+    const handleClose = () => setShow(false);
 
-    const go2bk = () => {
+    let go2bk = () => {
         handleClose()
         location.href = '/book';
     };
@@ -66,11 +60,11 @@ export default function Likes (effect, deps) {
                     <Col className="bar1 col-1">|</Col>
                     <Col className="infomenu1 col-5"><Link href='/myinfo'>내정보</Link></Col>
                 </Row>
-                <Row>
+                <Row className="likesncom">
                     <Col className="temples col-9 offset-1" style={{fontSize: "25px"}}>좋아요를 누른 사찰</Col>
                     <Col>
                         <>
-                            <Button variant="primary" className="combtn" onClick={compare}>비교하기</Button>
+                            <Button variant="primary" className="combtn" onClick={handleShow}>비교하기</Button>
                             <Modal size="xl" show={show} onHide={handleClose}>
                                 <Modal.Header style={{justifyContent: "center", height: "45px", color: "#331904"}}>
                                     <Modal.Title>템플 스테이 비교</Modal.Title>
@@ -118,77 +112,28 @@ export default function Likes (effect, deps) {
                 </Row>
                 <Row className="tpl">
                     <Col className="likeslist col-10 offset-1">
-                        <Col className="col-3" style={{display: "flex"}}>
-                            <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 1"></Form.Check>
-                                <img src="/img/temple.png" width="32" height="32" />
-                            </Col>
-                            <Col className="col-7">AA사</Col>
-                        </Col>
-                        <Col className="col-3">AA 주소</Col>
-                        <Col className="col-2">AA 날짜</Col>
-                        <Col className="col-3">AA 프로그램 이름</Col>
-                        <Col className="col-1">1명</Col>
-                    </Col>
-                </Row>
-                <Row className="tpl">
-                    <Col className="likeslist col-10 offset-1">
-                        <Col className="col-3" style={{display: "flex"}}>
-                            <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 2"></Form.Check>
-                                <img src="/img/temple.png" width="32" height="32"/>
-                            </Col>
-                            <Col className="col-7">BB사</Col>
-                        </Col>
-                        <Col className="col-3">BB 주소</Col>
-                        <Col className="col-2">BB 날짜</Col>
-                        <Col className="col-3">BB 프로그램 이름</Col>
-                        <Col className="col-1">2명</Col>
-                    </Col>
-                </Row>
-                <Row className="tpl">
-                    <Col className="likeslist col-10 offset-1">
-                        <Col className="col-3" style={{display: "flex"}}>
-                            <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 3"></Form.Check>
-                                <img src="/img/temple.png" width="32" height="32"/>
-                            </Col>
-                            <Col className="col-7">CC사</Col>
-                        </Col>
-                        <Col className="col-3">CC 주소</Col>
-                        <Col className="col-2">CC 날짜</Col>
-                        <Col className="col-3">CC 프로그램 이름</Col>
-                        <Col className="col-1">3명</Col>
-                    </Col>
-                </Row>
-                <Row className="tpl">
-                    <Col className="likeslist col-10 offset-1">
-                        <Col className="col-3" style={{display: "flex"}}>
-                            <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 4"></Form.Check>
-                                <img src="/img/temple.png" width="32" height="32"/>
-                            </Col>
-                            <Col className="col-7">DD사</Col>
-                        </Col>
-                        <Col className="col-3">DD 주소</Col>
-                        <Col className="col-2">DD 날짜</Col>
-                        <Col className="col-3">DD 프로그램 이름</Col>
-                        <Col className="col-1">4명</Col>
-                    </Col>
-                </Row>
-                <Row className="tpl">
-                    <Col className="likeslist col-10 offset-1">
-                        <Col className="col-3" style={{display: "flex"}}>
-                            <Col className="col-5" style={{display: "flex"}}>
-                                <Form.Check type="checkbox" className="checkbox" aria-label="option 5"></Form.Check>
-                                <img src="/img/temple.png" width="32" height="32"/>
-                            </Col>
-                            <Col className="col-7">EE사</Col>
-                        </Col>
-                        <Col className="col-3">EE 주소</Col>
-                        <Col className="col-2">EE 날짜</Col>
-                        <Col className="col-3">EE 프로그램 이름</Col>
-                        <Col className="col-1">5명</Col>
+                        <ul className="temples-list" style={{padding: "0"}}>
+                            {temples.map(({ name, location, day, program, number }, index ) => {   // temples에서 정보 가져오기
+                                return (
+                                    <div>
+                                        <li key={index} className="temples-list-item">
+                                            <Col className="col-3" style={{display: "flex", paddingLeft: "1%"}}>
+                                                <Col className="col-5" style={{display: "flex", alignItems: "center"}}>
+                                                    <Form.Check type="checkbox" className="checkbox" id={`custom-checkbox-${index}`} namd={name} value={name}
+                                                                checked={checkedState[index]} onChange={ (e) => handleOnChange(index, e) }></Form.Check>
+                                                    <img src="/img/temple.png" width="32" height="32" />
+                                                </Col>
+                                                <Col className="col-7" style={{display: "flex", alignItems: "center"}}>{name}</Col>
+                                            </Col>
+                                            <Col className="col-3">{location}</Col>
+                                            <Col className="col-2">{day}</Col>
+                                            <Col className="col-3">{program}</Col>
+                                            <Col className="col-1">{number}</Col>
+                                        </li>
+                                    </div>
+                                )
+                            } )}
+                        </ul>
                     </Col>
                 </Row>
             </Container>
