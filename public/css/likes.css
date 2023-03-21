@@ -84,6 +84,9 @@
     border: 1px solid #331904;
 }
 
+.gobkbtn > td:nth-child(2) {
+    border: 1px solid white;
+}
 .gobkbtn td button {
     border: 1px solid #984C0C !important;
     background-color: #984C0C !important;
