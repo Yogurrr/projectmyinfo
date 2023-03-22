@@ -3,12 +3,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Link from "next/link";
-import {Button, Form} from "react-bootstrap";
+import {Button, Form, Table} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import { temples } from "./utils/temples";
+import KakaoMap from "../Components/KakaoMap";
+// import modal from "bootstrap/js/src/modal";
 
 export default function Likes () {
-
     const [checkedState, setCheckedState] = useState(
         new Array(temples.length).fill(false)
     );
@@ -59,6 +60,16 @@ export default function Likes () {
         }
     };
 
+    useEffect(() => {
+        const modal = document.getElementById('myModal');
+        console.log(modal);
+        modal.addEventListener('shown.bs.modal', handleShow);
+
+        return () => {
+            modal.removeEventListener('shown.bs.modal', handleShow);
+        };
+    }, []);
+
     const [show, setShow] = useState(false);
     const handleShow = () => {
         let checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -77,6 +88,7 @@ export default function Likes () {
             setShow(true);
         }
     }
+
     const handleClose = () => setShow(false);
 
     let go2bk = () => {
@@ -86,8 +98,7 @@ export default function Likes () {
 
     console.log(userinfo.response)
 
-    function SelectCompareCnt(props) {
-        // const comCnt = props.type;
+    function SelectCompareCnt() {
         let checkboxes = document.querySelectorAll('input[type="checkbox"]');
         let comCnt = 0;
 
@@ -99,60 +110,76 @@ export default function Likes () {
 
         if (comCnt === 2) {
             return (
-                <table style={{textAlign: "center", border: "1px solid #331904"}}>
-                    <tr style={{height: "40px"}}>
-                        <th>{String(userinfo.response[0]).split(',')[0]}</th>
-                        <th>{String(userinfo.response[1]).split(',')[0]}</th>
-                    </tr>
-                    <tr style={{height: "500px"}}><td colSpan="3">지도</td></tr>
-                    <tr style={{height: "40px"}}>
-                        <td>{String(userinfo.response[0]).split(',')[1]}</td>
-                        <td>{String(userinfo.response[1]).split(',')[1]}</td>
-                    </tr>
-                    <tr style={{height: "40px"}}>
-                        <td>{String(userinfo.response[0]).split(',')[2]}</td>
-                        <td>{String(userinfo.response[1]).split(',')[2]}</td>
-                    </tr>
-                    <tr style={{height: "400px"}}>
-                        <td>{String(userinfo.response[0]).split(',')[3]}</td>
-                        <td>{String(userinfo.response[1]).split(',')[3]}</td>
-                    </tr>
-                    <tr className="gobkbtn">
-                        <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
-                        <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
-                    </tr>
-                </table>
+                <Table style={{textAlign: "center", border: "1px solid #331904"}}>
+                    <thead>
+                        <tr style={{height: "40px"}}>
+                            <th>{String(userinfo.response[0]).split(',')[0]}</th>
+                            <th>{String(userinfo.response[1]).split(',')[0]}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style={{height: "500px"}}>
+                            <td colSpan="2" id="map" style={{height: "100%", width: "100%"}}>
+                                <KakaoMap />
+                            </td>
+                        </tr>
+                        <tr style={{height: "40px"}}>
+                            <td>{String(userinfo.response[0]).split(',')[1]}</td>
+                            <td>{String(userinfo.response[1]).split(',')[1]}</td>
+                        </tr>
+                        <tr style={{height: "40px"}}>
+                            <td>{String(userinfo.response[0]).split(',')[2]}</td>
+                            <td>{String(userinfo.response[1]).split(',')[2]}</td>
+                        </tr>
+                        <tr style={{height: "400px"}}>
+                            <td>{String(userinfo.response[0]).split(',')[3]}</td>
+                            <td>{String(userinfo.response[1]).split(',')[3]}</td>
+                        </tr>
+                        <tr className="gobkbtn">
+                            <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
+                            <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
+                        </tr>
+                    </tbody>
+                </Table>
             );
         } else if(comCnt === 3) {
             return (
-                <table style={{textAlign: "center", border: "1px solid #331904"}}>
-                    <tr style={{height: "40px"}}>
-                        <th>{String(userinfo.response[0]).split(',')[0]}</th>
-                        <th>{String(userinfo.response[1]).split(',')[0]}</th>
-                        <th>{String(userinfo.response[2]).split(',')[0]}</th>
-                    </tr>
-                    <tr style={{height: "500px"}}><td colSpan="3">지도</td></tr>
-                    <tr style={{height: "40px"}}>
-                        <td>{String(userinfo.response[0]).split(',')[1]}</td>
-                        <td>{String(userinfo.response[1]).split(',')[1]}</td>
-                        <td>{String(userinfo.response[2]).split(',')[1]}</td>
-                    </tr>
-                    <tr style={{height: "40px"}}>
-                        <td>{String(userinfo.response[0]).split(',')[2]}</td>
-                        <td>{String(userinfo.response[1]).split(',')[2]}</td>
-                        <td>{String(userinfo.response[2]).split(',')[2]}</td>
-                    </tr>
-                    <tr style={{height: "400px"}}>
-                        <td>{String(userinfo.response[0]).split(',')[3]}</td>
-                        <td>{String(userinfo.response[1]).split(',')[3]}</td>
-                        <td>{String(userinfo.response[2]).split(',')[3]}</td>
-                    </tr>
-                    <tr className="gobkbtn">
-                        <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
-                        <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
-                        <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
-                    </tr>
-                </table>
+                <Table style={{textAlign: "center", border: "1px solid #331904"}}>
+                    <thead>
+                        <tr style={{height: "40px"}}>
+                            <th>{String(userinfo.response[0]).split(',')[0]}</th>
+                            <th>{String(userinfo.response[1]).split(',')[0]}</th>
+                            <th>{String(userinfo.response[2]).split(',')[0]}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style={{height: "500px"}}>
+                            <td colSpan="3" id="map" style={{height: "100%", width: "100%"}}>
+                                <KakaoMap />
+                            </td>
+                        </tr>
+                        <tr style={{height: "40px"}}>
+                            <td>{String(userinfo.response[0]).split(',')[1]}</td>
+                            <td>{String(userinfo.response[1]).split(',')[1]}</td>
+                            <td>{String(userinfo.response[2]).split(',')[1]}</td>
+                        </tr>
+                        <tr style={{height: "40px"}}>
+                            <td>{String(userinfo.response[0]).split(',')[2]}</td>
+                            <td>{String(userinfo.response[1]).split(',')[2]}</td>
+                            <td>{String(userinfo.response[2]).split(',')[2]}</td>
+                        </tr>
+                        <tr style={{height: "400px"}}>
+                            <td>{String(userinfo.response[0]).split(',')[3]}</td>
+                            <td>{String(userinfo.response[1]).split(',')[3]}</td>
+                            <td>{String(userinfo.response[2]).split(',')[3]}</td>
+                        </tr>
+                        <tr className="gobkbtn">
+                            <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
+                            <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
+                            <td style={{border: "1px solid white", borderTop: "1px solid #331904", paddingTop: "10px"}}><Button onClick={go2bk}>예약하러 가기</Button></td>
+                        </tr>
+                    </tbody>
+                </Table>
             );
         }
     }
@@ -163,13 +190,14 @@ export default function Likes () {
                 <Row className="lnm">
                     <Col className="likesmenu1 col-6">좋아요</Col>
                     <Col className="bar1 col-1">|</Col>
-                    <Col className="infomenu1 col-5"><Link href='/myinfo'>내정보</Link></Col>
+                    <Col className="infomenu1 col-5"><Link href='/myinfo'>예약정보</Link></Col>
                 </Row>
                 <Row className="likesncom">
-                    <Col className="temples col-9 offset-1" style={{fontSize: "25px"}}>좋아요를 누른 사찰</Col>
-                    <Col>
+                    <Col className="temples col-5 offset-1" style={{fontSize: "25px"}}>좋아요를 누른 사찰</Col>
+                    <Col className="col-5">
                         <>
                             <Button variant="primary" className="combtn" onClick={handleShow}>비교하기</Button>
+                            <React.Fragment id="myModal" className="modal">
                             <Modal size="xl" show={show} onHide={handleClose}>
                                 <Modal.Header style={{justifyContent: "center", height: "45px", color: "#331904"}}>
                                     <Modal.Title>템플 스테이 비교</Modal.Title>
@@ -183,6 +211,7 @@ export default function Likes () {
                                     </Button>
                                 </Modal.Footer>
                             </Modal>
+                            </React.Fragment>
                         </>
                     </Col>
                 </Row>
@@ -191,7 +220,7 @@ export default function Likes () {
                         <ul className="temples-list" style={{padding: "0"}}>
                             {temples.map(({ name, location, day, program, number, price, details }, index ) => {   // temples에서 정보 가져오기
                                 return (
-                                    <div>
+                                    <Row>
                                         <li key={index} className="temples-list-item">
                                             <Col className="col-3" style={{display: "flex", paddingLeft: "1%"}}>
                                                 <Col className="col-5" style={{display: "flex", alignItems: "center"}}>
@@ -206,11 +235,15 @@ export default function Likes () {
                                             <Col className="col-3">{program}</Col>
                                             <Col className="col-1">{number}</Col>
                                         </li>
-                                    </div>
+                                    </Row>
                                 )
                             } )}
                         </ul>
                     </Col>
+                </Row>
+                <Row>이 밑에 지도</Row>
+                <Row style={{width: "500px", height: "500px", display: "flex", justifyContent: "center"}} >
+                    <KakaoMap />
                 </Row>
             </Container>
         </main>

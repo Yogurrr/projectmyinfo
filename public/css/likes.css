@@ -34,6 +34,11 @@
 .likesncom {
     padding-top: 10px;
 }
+.likesncom > div:nth-child(2) {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
 
 .tpl {
     margin-bottom: 3%;
