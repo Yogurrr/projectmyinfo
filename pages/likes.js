@@ -4,10 +4,11 @@ import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Link from "next/link";
 import {Button, Form, Table} from "react-bootstrap";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { temples } from "./utils/temples";
 import {TbCircleNumber1, TbCircleNumber2, TbCircleNumber3} from "react-icons/tb";
 import GoogleMapReact from "google-map-react";
+import Geocode from "react-geocode";
 
 export default function Likes () {
 
@@ -16,11 +17,10 @@ export default function Likes () {
     );
     const [userinfo, setUserInfo] = useState({
         name: [],
+        location: [],
         program: [],
         price: [],
         details: [],
-        lat: [],
-        lng: [],
         response: [],
     });
 
@@ -38,18 +38,17 @@ export default function Likes () {
 
         // 체크박스에 체크된 데이터 가져오기
         const { value, checked } = e.target;
-        const { name, program, price, details, lat, lng } = userinfo;
+        const { name, location, program, price, details } = userinfo;
 
         // Case 1 : The user checks the box
         if (checked) {
             setUserInfo({
                 name: [...name, value],
+                location: [...location],
                 program: [...program],
                 price: [...price],
                 details: [...details],
-                lat: [...lat],
-                lng: [...lng],
-                response: [...name, ...program, ...price, ...details, ...lat, ...lng, value],
+                response: [...name, ...location, ...program, ...price, ...details, value],
             });
         }
 
@@ -57,13 +56,12 @@ export default function Likes () {
         else {
             setUserInfo({
                 name: name.filter((e) => e !== value),
+                location: location.filter((e) => e !== value),
                 program: program.filter((e) => e !== value),
                 price: price.filter((e) => e !== value),
                 details: details.filter((e) => e !== value),
-                lat: lat.filter((e) => e !== value),
-                lng: lng.filter((e) => e !== value),
-                response: [...name.filter((e) => e !== value), ...program.filter((e) => e !== value), ...price.filter((e) => e !== value),
-                    ...details.filter((e) => e !== value), ...lat.filter((e) => e !== value), ...lng.filter((e) => e !== value)],
+                response: [...name.filter((e) => e !== value), ...location.filter((e) => e !== value), ...program.filter((e) => e !== value),
+                    ...price.filter((e) => e !== value), ...details.filter((e) => e !== value)],
             });
         }
     };
@@ -93,8 +91,6 @@ export default function Likes () {
         handleClose()
         location.href = '/book';
     };
-
-    console.log(userinfo.response)
 
     // 구글맵 설정
     const googleMapsApiKey = "AIzaSyC5nBDG8jIWJwe02MZYhrmkhN22Fo81FTU";
@@ -132,21 +128,75 @@ export default function Likes () {
         }
     ];
 
-    let medianLat = (Number(String(userinfo.response[0]).split(',')[4]) + Number(String(userinfo.response[1]).split(',')[4])) / 2;
-    let medianLng = (Number(String(userinfo.response[0]).split(',')[5]) + Number(String(userinfo.response[1]).split(',')[5])) / 2;
+    // 주소로 좌표 찾기
+    Geocode.setApiKey("AIzaSyC5nBDG8jIWJwe02MZYhrmkhN22Fo81FTU");
+    Geocode.setLanguage("ko");
+    Geocode.setRegion("ko");
+    Geocode.setLocationType("ROOFTOP");
+    Geocode.enableDebug()
 
-    let marker1lat = Number(String(userinfo.response[0]).split(',')[4]);
-    let marker1lng = Number(String(userinfo.response[0]).split(',')[5]);
+    let temloc1 = String(userinfo.response[0]).split(',')[1];
+    let temloc2 = String(userinfo.response[1]).split(',')[1];
+    let temloc3 = String(userinfo.response[2]).split(',')[1];
+    // let address = `${temloc}`
 
-    let marker2lat = Number(String(userinfo.response[1]).split(',')[4]);
-    let marker2lng = Number(String(userinfo.response[1]).split(',')[5]);
+    // Get latitude & longitude from address.
+    const [coordinates, setCoordinates] = useState(null);
+    let getCoordinates = (address) => {
+        Geocode.fromAddress(address).then(
+            (response) => {
+                // let {lat, lng} = response.results[0].geometry.location;
+                setCoordinates(response.results[0].geometry.location);
+                // console.log(`${address} : [lat: ${lat}, lng: ${lng}]`);
+            },
+            (error) => {
+                console.error(error);
+            }
+        );
+    }
+    useEffect( () => {
+        getCoordinates(`${temloc1}`);
+    }, [`${temloc1}`]);
+    console.log(`lat: `, coordinates?.lat, `lng: `, coordinates?.lng)
 
-    let marker3lat = Number(String(userinfo.response[2]).split(',')[4]);
-    let marker3lng = Number(String(userinfo.response[2]).split(',')[5]);
+    const [coordinates2, setCoordinates2] = useState(null);
+    let getCoordinates2 = (address) => {
+        Geocode.fromAddress(address).then(
+            (response) => {
+                // let {lat, lng} = response.results[0].geometry.location;
+                setCoordinates2(response.results[0].geometry.location);
+                // console.log(`${address} : [lat: ${lat}, lng: ${lng}]`);
+            },
+            (error) => {
+                console.error(error);
+            }
+        );
+    }
+    useEffect( () => {
+        getCoordinates2(`${temloc2}`);
+    }, [`${temloc2}`]);
+    console.log(`lat2: `, coordinates2?.lat, `lng2: `, coordinates2?.lng)
 
-    console.log(`marker1lat: ${marker1lat}, marker3lng: ${marker1lng}`)
-    console.log(`marker2lat: ${marker2lat}, marker3lng: ${marker2lng}`)
-    console.log(`marker3lat: ${marker3lat}, marker3lng: ${marker3lng}`)
+    const [coordinates3, setCoordinates3] = useState(null);
+    let getCoordinates3 = (address) => {
+        Geocode.fromAddress(address).then(
+            (response) => {
+                // let {lat, lng} = response.results[0].geometry.location;
+                setCoordinates3(response.results[0].geometry.location);
+                // console.log(`${address} : [lat: ${lat}, lng: ${lng}]`);
+            },
+            (error) => {
+                console.error(error);
+            }
+        );
+    }
+    useEffect( () => {
+        getCoordinates3(`${temloc3}`);
+    }, [`${temloc3}`]);
+    console.log(`lat3: `, coordinates3?.lat, `lng3: `, coordinates3?.lng)
+
+    let medianLat = (coordinates?.lat + coordinates2?.lat) / 2;
+    let medianLng = (coordinates?.lng + coordinates2?.lng) / 2;
 
     // 구글맵1
     class GoogleMap1 extends React.Component {
@@ -156,8 +206,8 @@ export default function Likes () {
             this.state = {
                 defaultProps: {
                     center: this.props.center || {
-                        lat: this.props.lat || 37.48587156795423,
-                        lng: this.props.lng || 126.89736789924702
+                        lat: this.props.lat || medianLat,
+                        lng: this.props.lng || medianLng
                     },
                     zoom: this.props.zoom || 16,
                     styles: this.props.styles || [],
@@ -175,19 +225,19 @@ export default function Likes () {
                     layerTypes={this.state.defaultProps.layerTypes}
                     options={{ styles: this.state.defaultProps.styles }}
                 >
-                    <TbCircleNumber1 lat={marker1lat} lng={marker1lng} text={"Point 1"} size="30" color="#984C0C" />
-                    <TbCircleNumber2 lat={marker2lat} lng={marker2lng} text={"Point 2"} size="30" color="#984C0C" />
+                    <TbCircleNumber1 lat={coordinates?.lat} lng={coordinates2?.lng} text={"Point 1"} size="30" color="#984C0C" />
+                    <TbCircleNumber2 lat={coordinates2?.lat} lng={coordinates2?.lng} text={"Point 2"} size="30" color="#984C0C" />
                 </GoogleMapReact>
             );
         }
     }   // 구글맵1 끝
 
     // 구글맵2
-    let latArr = [marker1lat, marker2lat, marker3lat]
-    let lngArr = [marker1lng, marker2lng, marker3lng]
+    let latArr = [coordinates?.lat, coordinates2?.lat, coordinates3?.lat]
+    let lngArr = [coordinates?.lng, coordinates2?.lng, coordinates3?.lng]
 
-    let latG = (marker1lat + marker2lat + marker3lat) / 3;
-    let lngG = (marker1lng + marker2lng + marker3lng) / 3;
+    let latG = (coordinates?.lat + coordinates2?.lat + coordinates3?.lat) / 3;
+    let lngG = (coordinates?.lng + coordinates2?.lng + coordinates3?.lng) / 3;
     console.log(`latG : ${latG}, lngG : ${lngG}`);
 
     class GoogleMap2 extends React.Component {
@@ -195,23 +245,10 @@ export default function Likes () {
         constructor(props) {
             super(props);
 
-            function getMedian(array) {
-                if (array.length === 0) return NaN; // 빈 배열은 에러 반환(NaN은 숫자가 아니라는 의미임)
-                let center = parseInt(array.length / 2); // 요소 개수의 절반값 구하기
-
-                if (array.length % 2 === 1) { // 요소 개수가 홀수면
-                    return array[center]; // 홀수 개수인 배열에서는 중간 요소를 그대로 반환
-                } else {
-                    return (array[center - 1] + array[center]) / 2.0; // 짝수 개 요소는, 중간 두 수의 평균 반환
-                }
-            }
-
             this.state = {
                 defaultProps: {
                     center: this.props.center || {
-                        // lat: this.props.lat || getMedian(latArr.sort()),
                         lat: this.props.lat || latG,
-                        // lng: this.props.lng || getMedian(lngArr.sort())
                         lng: this.props.lng || lngG
                     },
                     zoom: this.props.zoom || 16,
@@ -225,28 +262,23 @@ export default function Likes () {
             return (
                 <GoogleMapReact
                     bootstrapURLKeys={{
-                        key: this.props.apiKey ? this.props.apiKey : "you need an API key!"
+                        key: this.props.apiKey ? this.props.apiKey : "AIzaSyC5nBDG8jIWJwe02MZYhrmkhN22Fo81FTU"
                     }}
                     defaultCenter={this.state.defaultProps.center}
                     defaultZoom={this.state.defaultProps.zoom}
                     layerTypes={this.state.defaultProps.layerTypes}
                     options={{ styles: this.state.defaultProps.styles }}
                 >
-                    <TbCircleNumber1 lat={marker1lat} lng={marker1lng} text={"Point 1"} size="30" color="#984C0C" />
-                    <TbCircleNumber2 lat={marker2lat} lng={marker2lng} text={"Point 2"} size="30" color="#984C0C" />
-                    <TbCircleNumber3 lat={marker3lat} lng={marker3lng} text={"Point 3"} size="30" color="#984C0C" />
+                    <TbCircleNumber1 lat={coordinates?.lat} lng={coordinates?.lng} text={"Point 1"} size="30" color="#984C0C" />
+                    <TbCircleNumber2 lat={coordinates2?.lat} lng={coordinates2?.lng} text={"Point 2"} size="30" color="#984C0C" />
+                    <TbCircleNumber3 lat={coordinates3?.lat} lng={coordinates3?.lng} text={"Point 3"} size="30" color="#984C0C" />
                 </GoogleMapReact>
             );
         }
     }   // 구글맵2 끝
 
-    // GoogleMap1에서 두 좌표간 거리 구하는 함수
-    function getDistanceFromLatLonInKm() {
-        let lat1 = marker1lat
-        let lng1 = marker1lng;
-        let lat2 = marker2lat;
-        let lng2 = marker2lng;
-
+    // GoogleMap에서 두 좌표간 거리 구하는 함수
+    function getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2) {
         function deg2rad(deg) {
             return deg * (Math.PI/180)
         }
@@ -258,7 +290,8 @@ export default function Likes () {
         let d = r * c; // Distance in km
         return Math.round(d*1000);
     }
-    console.log('거리1 :', getDistanceFromLatLonInKm())
+    let Distance = getDistanceFromLatLonInKm(coordinates?.lat, coordinates?.lng, coordinates2?.lat, coordinates2?.lng)
+    console.log('거리1 :', Distance)
 
     // GoogleMap2에서 두 좌표간 거리 구하는 함수
     let maxLat = Math.max(...latArr)
@@ -268,48 +301,27 @@ export default function Likes () {
     console.log(`maxLat : ${maxLat}, minLat : ${minLat}`)
     console.log(`maxLng : ${maxLng}, minLng : ${minLng}`)
 
-    function getDistanceFromLatLonInKm2() {
-        let lat1 = maxLat
-        let lng1 = maxLng;
-        let lat2 = minLat;
-        let lng2 = minLng;
+    console.log('거리2 :', getDistanceFromLatLonInKm(maxLat, maxLng, minLat, minLng))
+    let Distance2 = getDistanceFromLatLonInKm(maxLat, maxLng, minLat, minLng)
 
-        function deg2rad(deg) {
-            return deg * (Math.PI/180)
-        }
-        let r = 6371; //지구의 반지름(km)
-        let dLat = deg2rad(lat2-lat1);
-        let dLon = deg2rad(lng2-lng1);
-        let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2);
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        let d = r * c; // Distance in km
-        return Math.round(d*1000);
-    }
-    console.log('거리2 :', getDistanceFromLatLonInKm2())
-
-    // GoogleMap1에서 거리에 따른 줌 설정 함수
-    let changeZoom = () => {
-        if (getDistanceFromLatLonInKm() > 300000) {
+    // GoogleMap에서 거리에 따른 줌 설정 함수
+    let changeZoom = (dt) => {
+        if (dt > 320000) {
             return 7
-        } else if ((300000 >= getDistanceFromLatLonInKm()) && (getDistanceFromLatLonInKm() > 200000)) {
+        } else if ((320000 >= dt) && (dt > 180000)) {
             return 8
-        } else if ((200000 >= getDistanceFromLatLonInKm()) && (getDistanceFromLatLonInKm() > 100000)) {
+        } else if ((180000 >= dt) && (dt > 80000)) {
             return 9
-        } else return 10
+        } else if ((80000 >= dt) && (dt > 50000)) {
+            return 10
+        } else if ((50000 >= dt) && (dt > 25000)) {
+            return 11
+        } else if ((25000 >= dt) && (dt > 10000)) {
+            return 12
+        } else return 14
     }
-    console.log('changeZoom1 :', changeZoom())
-
-    // GoogleMap2에서 거리에 따른 줌 설정 함수
-    let changeZoom2 = () => {
-        if (getDistanceFromLatLonInKm2() > 300000) {
-            return 7
-        } else if ((300000 >= getDistanceFromLatLonInKm2()) && (getDistanceFromLatLonInKm2() > 200000)) {
-            return 8
-        } else if ((200000 >= getDistanceFromLatLonInKm2()) && (getDistanceFromLatLonInKm2() > 100000)) {
-            return 9
-        } else return 10
-    }
-    console.log('changeZoom2 :', changeZoom2())
+    console.log('changeZoom1 :', changeZoom(Distance))
+    console.log('changeZoom2 :', changeZoom(Distance2))
 
     function SelectCompareCnt() {
         let checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -335,13 +347,13 @@ export default function Likes () {
                         <td>{String(userinfo.response[0]).split(',')[0]}</td>
                         <td>{String(userinfo.response[1]).split(',')[0]}</td>
                     </tr>
-                        <tr style={{height: "800px"}}>
+                        <tr style={{height: "750px"}}>
                             <td colSpan="2" id="map" style={{height: "100%", width: "100%"}}>
                                 <GoogleMap1
                                     apiKey={googleMapsApiKey}
                                     center={[medianLat, medianLng]}
                                     styles={modalMapStyles}
-                                    zoom={changeZoom()}>
+                                    zoom={changeZoom(Distance)}>
                                 </GoogleMap1>
                             </td>
                         </tr>
@@ -380,16 +392,12 @@ export default function Likes () {
                         <td>{String(userinfo.response[1]).split(',')[0]}</td>
                         <td>{String(userinfo.response[2]).split(',')[0]}</td>
                     </tr>
-                        <tr style={{height: "800px"}}>
+                        <tr style={{height: "750px"}}>
                             <td colSpan="3" id="map" style={{height: "100%", width: "100%"}}>
                                 <GoogleMap2
                                     apiKey={googleMapsApiKey}
-                                    // center={[37.48587156795423, 126.89736789924702]}
                                     styles={modalMapStyles}
-                                    zoom={changeZoom2()}>
-                                    <TbCircleNumber1 lat={marker1lat} lng={marker1lng} text={"Point 1"} size="30" color="#984C0C" />
-                                    <TbCircleNumber2 lat={marker2lat} lng={marker2lng} text={"Point 2"} size="30" color="#984C0C" />
-                                    <TbCircleNumber3 lat={marker3lat} lng={marker3lng} text={"Point 3"} size="30" color="#984C0C" />
+                                    zoom={changeZoom(Distance2)}>
                                 </GoogleMap2>
                             </td>
                         </tr>
@@ -419,8 +427,7 @@ export default function Likes () {
         }
     }
 
-    console.log(medianLng, medianLat)
-    console.log(Number(String(userinfo.response[0]).split(',')[4]))
+    console.log('중간값 :', medianLng, medianLat)
 
     return (
         <main>
@@ -456,22 +463,20 @@ export default function Likes () {
                 <Row className="tpl">
                     <Col className="likeslist col-10 offset-1">
                         <ul className="temples-list" style={{padding: "0"}}>
-                            {temples.map(({ name, location, day, program, number, price, details, lat, lng }, index ) => {   // temples에서 정보 가져오기
+                            {temples.map(({ name, location, program, price, details }, index ) => {   // temples에서 정보 가져오기
                                 return (
                                     <Row>
                                         <li key={index} className="temples-list-item">
                                             <Col className="col-3" style={{display: "flex", paddingLeft: "1%"}}>
                                                 <Col className="col-5" style={{display: "flex", alignItems: "center"}}>
-                                                    <Form.Check type="checkbox" className="checkbox" id={`custom-checkbox-${index}`} namd={name} value={[name, program, price, details, lat, lng]}
+                                                    <Form.Check type="checkbox" className="checkbox" id={`custom-checkbox-${index}`} namd={name} value={[name, location, program, price, details]}
                                                                 checked={checkedState[index]} onChange={ (e) => handleOnChange(index, e) }></Form.Check>
                                                     <img src="/img/temple.png" width="32" height="32" />
                                                 </Col>
                                                 <Col className="col-7" style={{display: "flex", alignItems: "center"}}>{name}</Col>
                                             </Col>
-                                            <Col className="col-3">{location}</Col>
-                                            <Col className="col-2">{day}</Col>
-                                            <Col className="col-3">{program}</Col>
-                                            <Col className="col-1">{number}</Col>
+                                            <Col className="col-4">{location}</Col>
+                                            <Col className="col-5">{program}</Col>
                                         </li>
                                     </Row>
                                 )
