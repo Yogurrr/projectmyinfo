@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Link from "next/link";
 import {Table} from "react-bootstrap";
+import {bookinfo} from "./utils/bookinfo";
 
 export default function Myinfo () {
     return (
@@ -14,38 +15,42 @@ export default function Myinfo () {
                     <Col className="infomenu2 col-5">예약정보</Col>
                 </Row>
                 <Row className="msg">
-                    <Col className="offset-1">예약1</Col>
+                    <Col className="offset-1">예약정보</Col>
                 </Row>
                 <Row className="bkinfo">
                     <Col className="col-10 offset-1">
-                        <Table striped="columns" bordered className="bkdtb">
-                            <tbody>
+                        {bookinfo.map(({name, phone, tname, pname, category, period, pplnum, price}, index) => {
+                            return (
+                                <Table striped="columns" bordered className="bkdtb">
+                                <tbody key={index} value={[name, phone, tname, pname, category, period, pplnum, price]}>
                             <tr>
                                 <th>예약자 이름</th>
-                                <td></td>
+                                <td>{name}</td>
                                 <th>예약자 전화번호</th>
-                                <td></td>
+                                <td>{phone}</td>
                             </tr>
                             <tr>
                                 <th>절</th>
-                                <td></td>
+                                <td>{tname}</td>
                                 <th>프로그램 이름</th>
-                                <td></td>
+                                <td>{pname}</td>
                             </tr>
                             <tr>
                                 <th>분류</th>
-                                <td></td>
+                                <td>{category}</td>
                                 <th>기간</th>
-                                <td></td>
+                                <td>{period}</td>
                             </tr>
                             <tr>
                                 <th>인원</th>
-                                <td></td>
+                                <td>{pplnum}</td>
                                 <th>가격</th>
-                                <td></td>
+                                <td>{price}</td>
                             </tr>
                             </tbody>
-                        </Table>
+                                </Table>
+                                    )
+                        })}
                     </Col>
                 </Row>
             </Container>
